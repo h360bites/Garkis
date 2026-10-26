@@ -7,6 +7,29 @@ document.querySelectorAll("[data-year]").forEach((year) => {
   year.textContent = new Date().getFullYear();
 });
 
+const themeToggle = document.querySelector(".theme-toggle");
+const storedTheme = localStorage.getItem("garkis-theme");
+
+function applyTheme(theme) {
+  const isDark = theme === "dark";
+  document.documentElement.dataset.theme = isDark ? "dark" : "light";
+  if (themeToggle) {
+    const nextTheme = isDark ? "light" : "dark";
+    themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} mode`);
+    themeToggle.setAttribute("title", `Switch to ${nextTheme} mode`);
+    themeToggle.querySelector(".theme-toggle-label").textContent = `${nextTheme === "dark" ? "Dark" : "Light"} mode`;
+    themeToggle.querySelector(".theme-toggle-icon").textContent = isDark ? "☀" : "☾";
+  }
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", isDark ? "#151d19" : "#10251f");
+}
+
+applyTheme(storedTheme === "dark" ? "dark" : "light");
+themeToggle?.addEventListener("click", () => {
+  const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  localStorage.setItem("garkis-theme", nextTheme);
+  applyTheme(nextTheme);
+});
+
 menuToggle?.addEventListener("click", () => {
   const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
   menuToggle.setAttribute("aria-expanded", String(!isOpen));
